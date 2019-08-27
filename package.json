@@ -4,7 +4,9 @@
   "description": "fantasy league of legends app",
   "main": "index.js",
   "scripts": {
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "init": "lerna bootstrap",
+    "rise": "docker-compose up"
   },
   "repository": {
     "type": "git",
@@ -24,5 +26,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "lerna": "^3.14.1"
   }
 }
