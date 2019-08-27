@@ -1,0 +1,33 @@
+{
+  "name": "fantasy-league",
+  "version": "0.0.1",
+  "description": "fantasy league of legends app",
+  "main": "index.js",
+  "scripts": {
+    "commit": "git-cz",
+    "init": "lerna bootstrap",
+    "rise": "docker-compose up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reabreu/fantasy-league.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reabreu/fantasy-league/issues"
+  },
+  "homepage": "https://github.com/reabreu/fantasy-league#readme",
+  "devDependencies": {
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "lerna": "^3.14.1"
+  }
+}

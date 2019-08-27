@@ -1,2 +1,3 @@
-# fantasy-league
+# Fantasy League
+
 Fantasy League of Legends
