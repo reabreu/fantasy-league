@@ -25,4 +25,25 @@ services:
     ports:
       - "80:80"
     depends_on:
+      - client
+      - admin
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./packages/client
+    volumes:
+      - /app/.next
+      - /app/node_modules
+      - ./packages/client:/app
+    depends_on:
+      - api
+  admin:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./packages/admin
+    volumes:
+      - /app/.next
+      - /app/node_modules
+      - ./packages/admin:/app
+    depends_on:
       - api
