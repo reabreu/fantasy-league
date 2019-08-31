@@ -7,7 +7,8 @@
     "commit": "git-cz",
     "init": "lerna bootstrap",
     "rise": "docker-compose up",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "version": "lerna version"
   },
   "repository": {
     "type": "git",
