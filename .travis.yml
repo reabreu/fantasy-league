@@ -1,6 +1,26 @@
-sudo: required
+sudo: false
+language: node_js
+node_js:
+  - "node"
+cache:
+  yarn: true
+  directories:
+    # We cache the SDK so we don't have to download it again on subsequent builds.
+    - "$HOME/google-cloud-sdk/"
 services:
   - docker
+env:
+  global:
+    - GOOGLE_APPLICATION_CREDENTIALS=~/gcloud-service-key.json
+    - PROJECT_PROD=braided-gravity-251515
+    - CLUSTER=fantasy-league-prod
+    - ZONE=europe-west1-b
+    - NGINX_IMAGE=fantasy-league_nginx
+    - ADMIN_IMAGE=fantasy-league_admin
+    - CLIENT_IMAGE=fantasy-league_client
+    - API_IMAGE=fantasy-league_api
+    # Do not prompt for user input when using any SDK methods.
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
 before_install:
   - npm install
@@ -8,3 +28,19 @@ before_install:
 
 script:
   - npm run test
+
+before_deploy:
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf "$HOME/google-cloud-sdk"; curl https://sdk.cloud.google.com | bash > /dev/null; fi
+  # This line is critical. We setup the SDK to take precedence in our
+  # environment over the old SDK that is already on the machine.
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud --quiet version
+  - gcloud --quiet components update
+  - gcloud --quiet components update kubectl
+
+deploy:
+  - provider: script
+    script: chmod +x gcloud/deploy-prod.sh && gcloud/deploy-prod.sh
+    skip_cleanup: true
+    on:
+      branch: master
