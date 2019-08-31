@@ -6,7 +6,8 @@
   "scripts": {
     "commit": "git-cz",
     "init": "lerna bootstrap",
-    "rise": "docker-compose up"
+    "rise": "docker-compose up",
+    "test": "lerna run test"
   },
   "repository": {
     "type": "git",
