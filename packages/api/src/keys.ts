@@ -3,6 +3,5 @@ export const keys = {
   pgHost: process.env.PGHOST,
   pgDatabase: process.env.PGDATABASE,
   pgPassword: process.env.PGPASSWORD,
-  pgPort: process.env.PGPORT,
-  pandaScoreToken: process.env.PANDASCORETOKEN
+  pgPort: process.env.PGPORT
 };

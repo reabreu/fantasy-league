@@ -2,6 +2,10 @@ import Head from "next/head";
 import React from "react";
 import Link from "next/link";
 import axios from "axios";
+import getConfig from "next/config";
+
+// Only holds serverRuntimeConfig and publicRuntimeConfig from next.config.js nothing else.
+const { publicRuntimeConfig } = getConfig();
 
 const Players = ({ data }) => {
   return (
@@ -16,13 +20,13 @@ const Players = ({ data }) => {
       <Link href="/admin/">
         <a>Home</a>
       </Link>
-      <p>{data}</p>
+      <p>Admin: {data}</p>
     </div>
   );
 };
 
 Players.getInitialProps = async ({ req }) => {
-  const { data } = await axios.get("http://api:3000/");
+  const { data } = await axios.get(`${publicRuntimeConfig.apiURL}/`);
   return { data };
 };
 

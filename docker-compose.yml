@@ -43,6 +43,8 @@ services:
       - ./packages/client:/app
     depends_on:
       - api
+    environment:
+      - APIURL=http://api:3000
   admin:
     build:
       dockerfile: Dockerfile.dev
@@ -52,3 +54,5 @@ services:
       - ./packages/admin:/app
     depends_on:
       - api
+    environment:
+      - APIURL=http://api:3000
