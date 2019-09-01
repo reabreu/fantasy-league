@@ -5,7 +5,7 @@ import * as cors from "cors";
 import { keys } from "./keys";
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
-import { InitialUsers1567189651689 } from "./migration/1567189651689-initialUsers";
+import { InitialUsers1567189651689 } from "./migration/1567189651689-InitialUsers";
 
 // Express App Setup
 const app = express();
