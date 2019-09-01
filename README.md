@@ -1,3 +1,3 @@
 # Fantasy League
 
-Fantasy League of Legends
+Fantasy League of Legends app
