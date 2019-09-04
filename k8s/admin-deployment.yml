@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: admin
+  template:
+    metadata:
+      labels:
+        component: admin
+    spec:
+      containers:
+        - name: admin
+          image: eu.gcr.io/braided-gravity-251515/fantasy-league_admin:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: APIURL
+              value: http://api-cluster-ip-service

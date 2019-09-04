@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: client
+  template:
+    metadata:
+      labels:
+        component: client
+    spec:
+      containers:
+        - name: client
+          image: eu.gcr.io/braided-gravity-251515/fantasy-league_client:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: APIURL
+              value: http://api-cluster-ip-service
