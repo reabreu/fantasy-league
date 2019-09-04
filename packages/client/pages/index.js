@@ -16,7 +16,7 @@ const Index = ({ data }) => {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
         />
       </Head>
-      <p>Client: {data}</p>
+      <p>Client updated: {data}</p>
     </div>
   );
 };

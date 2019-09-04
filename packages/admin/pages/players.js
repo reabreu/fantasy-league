@@ -20,7 +20,7 @@ const Players = ({ data }) => {
       <Link href="/admin/">
         <a>Home</a>
       </Link>
-      <p>Admin: {data}</p>
+      <p>Admin updated: {data}</p>
     </div>
   );
 };

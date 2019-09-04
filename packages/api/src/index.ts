@@ -33,7 +33,7 @@ createConnection({
 
 // routes
 app.get("/", async (req, res) => {
-  res.send(`Hi im the api`);
+  res.send(`Hi im the api2`);
 });
 
 app.listen(3000, err => {

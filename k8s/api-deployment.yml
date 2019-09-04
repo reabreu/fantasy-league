@@ -17,3 +17,17 @@ spec:
           image: eu.gcr.io/braided-gravity-251515/fantasy-league_api:latest
           ports:
             - containerPort: 3000
+          env:
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+              value: 10.68.224.7
+            - name: PGDATABASE
+              value: postgres
+            - name: PGPORT
+              value: 5432
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
