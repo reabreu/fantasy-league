@@ -21,11 +21,11 @@ spec:
             - name: PGUSER
               value: postgres
             - name: PGHOST
-              value: 10.68.224.7
+              value: "10.68.224.7"
             - name: PGDATABASE
               value: postgres
             - name: PGPORT
-              value: 5432
+              value: "5432"
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
