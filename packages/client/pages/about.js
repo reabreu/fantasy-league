@@ -1,10 +1,10 @@
 import Head from "next/head";
 import React from "react";
-import axios from "axios";
-import getConfig from "next/config";
 import Link from "next/link";
+import getConfig from "next/config";
+import axios from "axios";
 
-const Index = ({ data }) => {
+const About = ({ data }) => {
   return (
     <div>
       <Head>
@@ -14,15 +14,15 @@ const Index = ({ data }) => {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
         />
       </Head>
-      <Link href="/about">
-        <a>About</a>
+      <Link href="/">
+        <a>Home</a>
       </Link>
-      <p>Client updated: {data}</p>
+      <p>About {data}</p>
     </div>
   );
 };
 
-Index.getInitialProps = async ({ req }) => {
+About.getInitialProps = async ({ req }) => {
   const isServer = !!req;
   const { publicRuntimeConfig } = getConfig();
   const apiEndpoint = isServer ? publicRuntimeConfig.apiURL : "/api";
@@ -30,4 +30,4 @@ Index.getInitialProps = async ({ req }) => {
   return { data };
 };
 
-export default Index;
+export default About;
