@@ -12,6 +12,18 @@ const Index = () => {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
         />
       </Head>
+      <Link href="/admin/leagues">
+        <a>Leagues</a>
+      </Link>
+      <Link href="/admin/series">
+        <a>Series</a>
+      </Link>
+      <Link href="/admin/tournaments">
+        <a>Tournaments</a>
+      </Link>
+      <Link href="/admin/teams">
+        <a>Teams</a>
+      </Link>
       <Link href="/admin/players">
         <a>Players</a>
       </Link>

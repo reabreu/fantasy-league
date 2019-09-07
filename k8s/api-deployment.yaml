@@ -31,3 +31,10 @@ spec:
                 secretKeyRef:
                   name: pgpassword
                   key: PGPASSWORD
+            - name: PANDASCOREURL
+              value: "https://api.pandascore.co/lol"
+            - name: PANDASCOREKEY
+              valueFrom:
+                secretKeyRef:
+                  name: pandascorekey
+                  key: PANDASCOREKEY

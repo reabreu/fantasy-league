@@ -16,6 +16,8 @@ services:
       - PGDATABASE=postgres
       - PGPASSWORD=postgres_password
       - PGPORT=5432
+      - PANDASCOREURL=https://api.pandascore.co/lol
+      - PANDASCOREKEY=foo
     depends_on:
       - postgres
   adminer:
@@ -23,6 +25,8 @@ services:
     restart: always
     ports:
       - 8080:8080
+    logging:
+      driver: none
   nginx:
     restart: always
     build:
@@ -33,6 +37,8 @@ services:
     depends_on:
       - client
       - admin
+    logging:
+      driver: none
   client:
     build:
       dockerfile: Dockerfile.dev
