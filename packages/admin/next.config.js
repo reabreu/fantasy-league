@@ -1,5 +1,5 @@
 module.exports = {
-  assetPrefix: "http://localhost/admin/",
+  assetPrefix: "/admin/",
   publicRuntimeConfig: {
     apiURL: process.env.APIURL,
     apiURLPublic: process.env.APIURLPUBLIC
