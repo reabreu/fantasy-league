@@ -3,9 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import getConfig from "next/config";
-
-// Only holds and publicRuntimeConfig from next.config.js nothing else.
-const { publicRuntimeConfig } = getConfig();
+import Header from "../components/Header";
 
 const Tournaments = ({ tournaments }) => {
   const [data, setData] = useState(tournaments);
@@ -24,21 +22,7 @@ const Tournaments = ({ tournaments }) => {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
         />
       </Head>
-      <Link href="/admin/leagues">
-        <a>Leagues</a>
-      </Link>
-      <Link href="/admin/series">
-        <a>Series</a>
-      </Link>
-      <Link href="/admin/tournaments">
-        <a>Tournaments</a>
-      </Link>
-      <Link href="/admin/teams">
-        <a>Teams</a>
-      </Link>
-      <Link href="/admin/players">
-        <a>Players</a>
-      </Link>
+      <Header />
       <p>Tournaments:</p>
       <button onClick={syncTournaments}>Sync Tournaments</button>
       <table>
@@ -50,7 +34,14 @@ const Tournaments = ({ tournaments }) => {
           </tr>
           {data.map(({ id, name, slug }) => (
             <tr key={id}>
-              <td>{id}</td>
+              <td>
+                <Link
+                  href="/admin/tournament/[pid]"
+                  as={`/admin/tournament/${id}`}
+                >
+                  <a>{id}</a>
+                </Link>
+              </td>
               <td>{name}</td>
               <td>{slug}</td>
             </tr>
@@ -62,6 +53,8 @@ const Tournaments = ({ tournaments }) => {
 };
 
 Tournaments.getInitialProps = async ({ req }) => {
+  // Only holds and publicRuntimeConfig from next.config.js nothing else.
+  const { publicRuntimeConfig } = getConfig();
   const res = await axios.get(`${publicRuntimeConfig.apiURL}/tournaments`);
   return { tournaments: res.data.tournaments };
 };

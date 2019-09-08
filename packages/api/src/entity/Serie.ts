@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany
+} from "typeorm";
+import { League } from "./League";
+import { Tournament } from "./Tournament";
 
 @Entity()
 export class Serie {
@@ -25,6 +34,13 @@ export class Serie {
   @Column()
   league_id: number;
 
+  @ManyToOne(type => League, league => league.series)
+  @JoinColumn({ name: "league_id" })
+  league: number;
+
   @Column()
   year: number;
+
+  @OneToMany(type => Tournament, tournament => tournament.serie_id)
+  tournaments: Tournament[];
 }

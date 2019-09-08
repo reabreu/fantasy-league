@@ -103,7 +103,8 @@ app.get("/series", async (req, res) => {
   try {
     const series = await getConnection()
       .getRepository(Serie)
-      .createQueryBuilder("series")
+      .createQueryBuilder("serie")
+      .leftJoinAndSelect("serie.league", "league")
       .getMany();
 
     res.send({ series });
@@ -211,35 +212,38 @@ app.get("/tournaments/sync", async (req, res) => {
   }
 });
 
-app.get("/teams", async (req, res) => {
+app.get("/tournament/:id", async (req, res) => {
   try {
-    const teams = await getConnection()
-      .getRepository(Team)
-      .createQueryBuilder("team")
-      .getMany();
+    const tournament = await getConnection()
+      .getRepository(Tournament)
+      .createQueryBuilder("tournament")
+      .where("tournament.id = :id", { id: req.params.id })
+      .leftJoinAndSelect("tournament.serie", "serie")
+      .leftJoinAndSelect("tournament.league", "league")
+      .getOne();
 
-    res.send({ teams });
+    res.send({ tournament });
   } catch (e) {
     console.log("Error:", e);
   }
 });
 
-app.get("/teams/sync", async (req, res) => {
+app.get("/tournament/:id/sync/teams", async (req, res) => {
   try {
-    const tournaments = await getConnection()
-      .getRepository(Tournament)
-      .createQueryBuilder("tournament")
-      .getMany();
+    try {
+      const tournament = await getConnection()
+        .getRepository(Tournament)
+        .createQueryBuilder("tournament")
+        .where("tournament.id = :id", { id: req.params.id })
+        .getOne();
 
-    for (let index = 0; index < tournaments.length; index++) {
-      const tournament = tournaments[index];
-
+      // 1) Sync all teams
       const teams = await pandaScoreAxios.get(
         `/tournaments/${tournament.id}/teams`
       );
 
-      for (let index2 = 0; index2 < teams.data.length; index2++) {
-        const team = teams.data[index2];
+      for (let index = 0; index < teams.data.length; index++) {
+        const team = teams.data[index];
 
         const leagueDB = await getConnection()
           .createQueryBuilder()
@@ -257,77 +261,171 @@ app.get("/teams/sync", async (req, res) => {
           .values([team])
           .execute();
       }
+
+      // 2) Create Tournament/Team relationship
+
+      // 3) Sync all players
+      // const players = await pandaScoreAxios.get(
+      //   `/tournaments/${tournament.id}/players?per_page=100`
+      // );
+
+      // for (let index = 0; index < players.data.length; index++) {
+      //   const player = players.data[index];
+
+      //   const leagueDB = await getConnection()
+      //     .createQueryBuilder()
+      //     .select("player.name")
+      //     .from(Player, "player")
+      //     .where("player.id = :id", { id: player.id })
+      //     .getOne();
+
+      //   if (typeof leagueDB !== "undefined") continue;
+
+      //   await getConnection()
+      //     .createQueryBuilder()
+      //     .insert()
+      //     .into(Player)
+      //     .values([player])
+      //     .execute();
+      // }
+
+      // 4) Create Tournament/Team/Relationship relationship
+
+      // 5) Return updated tournament
+      const updatedTournament = await getConnection()
+        .getRepository(Tournament)
+        .createQueryBuilder("tournament")
+        .where("tournament.id = :id", { id: req.params.id })
+        .leftJoinAndSelect("tournament.serie", "serie")
+        .leftJoinAndSelect("tournament.league", "league")
+        .getOne();
+
+      res.send({ tournament: updatedTournament });
+    } catch (e) {
+      console.log("Error:", e);
     }
-
-    const teams = await getConnection()
-      .getRepository(Team)
-      .createQueryBuilder("team")
-      .getMany();
-
-    res.send({ teams });
   } catch (e) {
     console.log("Error:", e);
   }
 });
 
-app.get("/players", async (req, res) => {
-  try {
-    const players = await getConnection()
-      .getRepository(Player)
-      .createQueryBuilder("player")
-      .getMany();
+// app.get("/teams", async (req, res) => {
+//   try {
+//     const teams = await getConnection()
+//       .getRepository(Team)
+//       .createQueryBuilder("team")
+//       .getMany();
 
-    res.send({ players });
-  } catch (e) {
-    console.log("Error:", e);
-  }
-});
+//     res.send({ teams });
+//   } catch (e) {
+//     console.log("Error:", e);
+//   }
+// });
 
-app.get("/players/sync", async (req, res) => {
-  try {
-    const tournaments = await getConnection()
-      .getRepository(Tournament)
-      .createQueryBuilder("tournament")
-      .getMany();
+// app.get("/teams/sync", async (req, res) => {
+//   try {
+//     const tournaments = await getConnection()
+//       .getRepository(Tournament)
+//       .createQueryBuilder("tournament")
+//       .getMany();
 
-    for (let index = 0; index < tournaments.length; index++) {
-      const tournament = tournaments[index];
+//     for (let index = 0; index < tournaments.length; index++) {
+//       const tournament = tournaments[index];
 
-      const teams = await pandaScoreAxios.get(
-        `/tournaments/${tournament.id}/players`
-      );
+//       const teams = await pandaScoreAxios.get(
+//         `/tournaments/${tournament.id}/teams`
+//       );
 
-      for (let index2 = 0; index2 < teams.data.length; index2++) {
-        const player = teams.data[index2];
+//       for (let index2 = 0; index2 < teams.data.length; index2++) {
+//         const team = teams.data[index2];
 
-        const leagueDB = await getConnection()
-          .createQueryBuilder()
-          .select("player.name")
-          .from(Player, "player")
-          .where("player.id = :id", { id: player.id })
-          .getOne();
+//         const leagueDB = await getConnection()
+//           .createQueryBuilder()
+//           .select("team.name")
+//           .from(Team, "team")
+//           .where("team.id = :id", { id: team.id })
+//           .getOne();
 
-        if (typeof leagueDB !== "undefined") continue;
+//         if (typeof leagueDB !== "undefined") continue;
 
-        await getConnection()
-          .createQueryBuilder()
-          .insert()
-          .into(Player)
-          .values([player])
-          .execute();
-      }
-    }
+//         await getConnection()
+//           .createQueryBuilder()
+//           .insert()
+//           .into(Team)
+//           .values([team])
+//           .execute();
+//       }
+//     }
 
-    const players = await getConnection()
-      .getRepository(Player)
-      .createQueryBuilder("player")
-      .getMany();
+//     const teams = await getConnection()
+//       .getRepository(Team)
+//       .createQueryBuilder("team")
+//       .getMany();
 
-    res.send({ players });
-  } catch (e) {
-    console.log("Error:", e);
-  }
-});
+//     res.send({ teams });
+//   } catch (e) {
+//     console.log("Error:", e);
+//   }
+// });
+
+// app.get("/players", async (req, res) => {
+//   try {
+//     const players = await getConnection()
+//       .getRepository(Player)
+//       .createQueryBuilder("player")
+//       .getMany();
+
+//     res.send({ players });
+//   } catch (e) {
+//     console.log("Error:", e);
+//   }
+// });
+
+// app.get("/players/sync", async (req, res) => {
+//   try {
+//     const tournaments = await getConnection()
+//       .getRepository(Tournament)
+//       .createQueryBuilder("tournament")
+//       .getMany();
+
+//     for (let index = 0; index < tournaments.length; index++) {
+//       const tournament = tournaments[index];
+
+//       const teams = await pandaScoreAxios.get(
+//         `/tournaments/${tournament.id}/players`
+//       );
+
+//       for (let index2 = 0; index2 < teams.data.length; index2++) {
+//         const player = teams.data[index2];
+
+//         const leagueDB = await getConnection()
+//           .createQueryBuilder()
+//           .select("player.name")
+//           .from(Player, "player")
+//           .where("player.id = :id", { id: player.id })
+//           .getOne();
+
+//         if (typeof leagueDB !== "undefined") continue;
+
+//         await getConnection()
+//           .createQueryBuilder()
+//           .insert()
+//           .into(Player)
+//           .values([player])
+//           .execute();
+//       }
+//     }
+
+//     const players = await getConnection()
+//       .getRepository(Player)
+//       .createQueryBuilder("player")
+//       .getMany();
+
+//     res.send({ players });
+//   } catch (e) {
+//     console.log("Error:", e);
+//   }
+// });
 
 app.listen(3000, err => {
   console.log("Listening");
