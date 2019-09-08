@@ -15,6 +15,13 @@ const TournamentPID = ({ tournament }) => {
     setData(res.data.tournament);
   };
 
+  const syncMatches = async () => {
+    const res = await axios.get(
+      `/api/tournament/${router.query.pid}/sync/matches`
+    );
+    // setData(res.data.tournament);
+  };
+
   return (
     <div>
       <h1>
@@ -67,7 +74,7 @@ const TournamentPID = ({ tournament }) => {
         );
       })}
       <h2>Matches:</h2>
-      <button>Sync Matches</button>
+      <button onClick={syncMatches}>Sync Matches</button>
     </div>
   );
 };

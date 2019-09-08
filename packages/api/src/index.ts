@@ -10,6 +10,8 @@ import { Tournament } from "./entity/Tournament";
 import { Team } from "./entity/Team";
 import { Serie } from "./entity/Serie";
 import { Player } from "./entity/Player";
+import { Match } from "./entity/Match";
+import { Game } from "./entity/Game";
 import { TournamentTeam } from "./entity/TournamentTeam";
 import { InitialUsers1567189651689 } from "./migration/1567189651689-InitialUsers";
 import axios from "axios";
@@ -34,7 +36,17 @@ createConnection({
   username: keys.pgUser,
   password: keys.pgPassword,
   database: keys.pgDatabase,
-  entities: [User, League, Tournament, Serie, Team, Player, TournamentTeam],
+  entities: [
+    User,
+    League,
+    Tournament,
+    Serie,
+    Team,
+    Player,
+    TournamentTeam,
+    Match,
+    Game
+  ],
   synchronize: true,
   logging: false,
   migrationsRun: true,
@@ -331,6 +343,53 @@ app.get("/tournament/:id/sync/teams", async (req, res) => {
       });
 
     res.send({ tournament: updatedTournament });
+  } catch (e) {
+    console.log("Error:", e);
+  }
+});
+
+app.get("/tournament/:id/sync/matches", async (req, res) => {
+  try {
+    const result = await pandaScoreAxios.get(
+      `/matches?&filter[tournament_id]=${req.params.id}&per_page=100`
+    );
+
+    for (let index = 0; index < result.data.length; index++) {
+      const match = result.data[index];
+
+      const matchDB = await await getConnection()
+        .getRepository(Match)
+        .findOne({
+          id: match.id
+        });
+
+      if (typeof matchDB === "undefined") {
+        await getConnection()
+          .getRepository(Match)
+          .save(match);
+      }
+
+      // Sync games for each match
+      const games = await pandaScoreAxios.get(`/matches/${match.id}/games`);
+
+      for (let index2 = 0; index2 < games.data.length; index2++) {
+        const game = games.data[index2];
+
+        const gameDB = await await getConnection()
+          .getRepository(Game)
+          .findOne({
+            id: game.id
+          });
+
+        if (typeof gameDB === "undefined") {
+          await getConnection()
+            .getRepository(Game)
+            .save(game);
+        }
+      }
+    }
+
+    res.send({ ok: "ok" });
   } catch (e) {
     console.log("Error:", e);
   }

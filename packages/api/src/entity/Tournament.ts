@@ -9,7 +9,7 @@ import {
 import { Serie } from "./Serie";
 import { League } from "./League";
 import { TournamentTeam } from "./TournamentTeam";
-
+import { Match } from "./Match";
 @Entity()
 export class Tournament {
   @PrimaryColumn()
@@ -46,4 +46,7 @@ export class Tournament {
     tournamentTeam => tournamentTeam.tournaments
   )
   teams: TournamentTeam[];
+
+  @OneToMany(type => Match, match => match.tournament)
+  matches: Match[];
 }
