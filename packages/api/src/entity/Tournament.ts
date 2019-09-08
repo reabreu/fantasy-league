@@ -1,7 +1,14 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany
+} from "typeorm";
 import { Serie } from "./Serie";
 import { League } from "./League";
-import { Team } from "./Team";
+import { TournamentTeam } from "./TournamentTeam";
 
 @Entity()
 export class Tournament {
@@ -33,4 +40,10 @@ export class Tournament {
   @ManyToOne(type => Serie, serie => serie.tournaments)
   @JoinColumn({ name: "serie_id" })
   serie: Serie;
+
+  @OneToMany(
+    type => TournamentTeam,
+    tournamentTeam => tournamentTeam.tournaments
+  )
+  teams: TournamentTeam[];
 }

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
+import { TournamentTeam } from "./TournamentTeam";
 
 @Entity()
 export class Team {
@@ -16,4 +17,7 @@ export class Team {
 
   @Column()
   acronym: string;
+
+  @OneToMany(type => TournamentTeam, tournamentTeam => tournamentTeam.team)
+  tournaments: TournamentTeam[];
 }

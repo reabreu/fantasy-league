@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
-
+import { Entity, Column, PrimaryColumn, ManyToMany } from "typeorm";
+import { TournamentTeam } from "./TournamentTeam";
 @Entity()
 export class Player {
   @PrimaryColumn()
@@ -27,4 +27,7 @@ export class Player {
 
   @Column()
   slug: string;
+
+  @ManyToMany(type => TournamentTeam, tournamentTeam => tournamentTeam.players)
+  tournamentTeams: TournamentTeam[];
 }
