@@ -36,8 +36,8 @@ const Tournaments = ({ tournaments }) => {
             <tr key={id}>
               <td>
                 <Link
-                  href="/admin/tournament/[pid]"
-                  as={`/admin/tournament/${id}`}
+                  href="/admin/tournaments/[pid]"
+                  as={`/admin/tournaments/${id}`}
                 >
                   <a>{id}</a>
                 </Link>

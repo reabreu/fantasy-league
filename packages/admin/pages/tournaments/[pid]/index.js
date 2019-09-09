@@ -2,6 +2,7 @@ import getConfig from "next/config";
 import axios from "axios";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import Header from "../../../components/Header";
 
 const TournamentPID = ({ tournament }) => {
   const router = useRouter();
@@ -10,20 +11,21 @@ const TournamentPID = ({ tournament }) => {
 
   const syncTeams = async () => {
     const res = await axios.get(
-      `/api/tournament/${router.query.pid}/sync/teams`
+      `/api/tournaments/${router.query.pid}/sync/teams`
     );
     setData(res.data.tournament);
   };
 
   const syncMatches = async () => {
     const res = await axios.get(
-      `/api/tournament/${router.query.pid}/sync/matches`
+      `/api/tournaments/${router.query.pid}/sync/matches`
     );
     // setData(res.data.tournament);
   };
 
   return (
     <div>
+      <Header />
       <h1>
         Tournament: {league.name} - {serie.full_name} {name}
       </h1>
@@ -82,7 +84,7 @@ const TournamentPID = ({ tournament }) => {
 TournamentPID.getInitialProps = async ({ query }) => {
   const { publicRuntimeConfig } = getConfig();
   const res = await axios.get(
-    `${publicRuntimeConfig.apiURL}/tournament/${query.pid}`
+    `${publicRuntimeConfig.apiURL}/tournaments/${query.pid}`
   );
   return { tournament: res.data.tournament };
 };
